@@ -11,6 +11,8 @@ import java.io.Writer;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
@@ -55,7 +57,7 @@ public class Servidor extends Thread {
 
         try {
 
-            String msg;
+            String msg, aux;
             OutputStream ou = this.con.getOutputStream();
             Writer ouw = new OutputStreamWriter(ou);
             BufferedWriter bfw = new BufferedWriter(ouw);
@@ -64,14 +66,37 @@ public class Servidor extends Thread {
 
             while (!"Sair".equalsIgnoreCase(msg) && msg != null) {
                 msg = bfr.readLine();
-                sendToAll(bfw, msg);
-                System.out.println(msg);
+                aux = tratamentoDePalavras(msg);
+                sendToAll(bfw, aux);
+                System.out.println("O que deve ser impresso " + aux);
             }
 
         } catch (Exception e) {
             e.printStackTrace();
 
         }
+    }
+
+    public String tratamentoDePalavras(String frase) {
+        String[] palavroes = {"foda", "porra", "puta", "cacete", "merda", "arrombado", "arrombada", "cu", "cuzao", "babaca", "otário", "otario", "desgraça", "desgraca",};
+        String str = frase;
+        for (String n : palavroes) {
+            str = str.replaceAll(n, repete(n.length()));
+        }
+        for (String n : palavroes) {
+            str = str.toLowerCase().replaceAll(n, "*****");
+        }
+
+        System.out.println("Frase alterada: " + str);
+        return str;
+    }
+
+    public String repete(int i) {
+        String r = "";
+        for (int j = 0; j < i; j++) {
+            r += "*";
+        }
+        return r;
     }
 
     /**

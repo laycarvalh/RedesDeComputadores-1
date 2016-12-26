@@ -109,12 +109,31 @@ public class Cliente extends JFrame implements ActionListener, KeyListener {
             texto.append("Desconectado \r\n");
         } else {
             bfw.write(msg + "\r\n");
-            texto.append(txtNome.getText() + " diz -> " + txtMsg.getText() + "\r\n");
+            texto.append(txtNome.getText() + " diz -> " + tratamentoDePalavras(txtMsg.getText()) + "\r\n");
         }
         bfw.flush();
         txtMsg.setText("");
     }
+    public String tratamentoDePalavras(String frase) {
+        String[] palavroes = {"foda", "porra", "puta", "cacete", "merda", "arrombado", "arrombada", "cu", "cuzao", "babaca", "otário", "otario", "desgraça", "desgraca",};
+        String str = frase;
+        for (String n : palavroes) {
+            str = str.replaceAll(n, repete(n.length()));
+        }
+        for (String n : palavroes) {
+            str = str.toLowerCase().replaceAll(n, "*****");
+        }
 
+        System.out.println("Frase alterada: " + str);
+        return str;
+    }
+    public String repete(int i) {
+        String r = "";
+        for (int j = 0; j < i ; j++){
+            r += "*";
+        }
+        return r;
+    }
     public void escutar() throws IOException {
 
         InputStream in = socket.getInputStream();
